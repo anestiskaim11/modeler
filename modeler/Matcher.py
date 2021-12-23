@@ -33,7 +33,7 @@ class Matcher:
 		kp2, desc2 = self.detector.detectAndCompute(image2, None)
 
 		# TODO try cv.DIST_L2 instead
-		matcher = cv.BFMatcher(cv.NORM_L2)
+		matcher = cv.BFMatcher(cv.DIST_L2)
 
 		matches1 = matcher.knnMatch(desc1, desc2, k=2)
 		matches2 = matcher.knnMatch(desc2, desc1, k=2)
