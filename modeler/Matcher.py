@@ -56,6 +56,7 @@ class Matcher:
 
 	def ratio_test(self, matches):
 		removed = 0
+		print(matches)
 		for match in matches:
 			if len(match) > 1:
 				if match[0].distance/match[1].distance > self.ratio:
