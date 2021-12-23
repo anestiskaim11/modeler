@@ -44,12 +44,12 @@ class Matcher:
 		sym_matches = self.symmetry_test(matches1, matches2)
 		matches = None
 
-		if len(sym_matches) < 30:
+		if len(sym_matches) < 100:
 			enough_matches = False
 		else:
 			enough_matches = True
 			self.fundamental_matrix, matches = self.ransac_test(sym_matches, kp1, kp2)
-			if len(matches) < 25:
+			if len(matches) < 80:
 				enough_matches = False
 
 		return enough_matches, matches, kp1, kp2
