@@ -13,7 +13,7 @@ class ImagePair:
 		good_matcher.set_confidence_level(0.98)
 		good_matcher.set_min_distance_to_epipolar(1.0)
 		good_matcher.set_ratio(0.65)
-		surf = cv.xfeatures2d_SURF.create()
+		surf = cv.SIFT_create()
 		good_matcher.set_detector(surf)
 
 		self.kp1 = []

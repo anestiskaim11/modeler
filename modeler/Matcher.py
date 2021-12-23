@@ -8,7 +8,7 @@ class Matcher:
 		self.refineF = True
 		self.confidence = 0.99
 		self.distance = 3.0
-		self.detector = cv.xfeatures2d_SURF.create()
+		self.detector = cv.SIFT_create()
 		self.fundamental_matrix = None
 
 	def get_fundamental_matrix(self):
