@@ -90,7 +90,7 @@ class Matcher:
 			points1.append(kp1[match.queryIdx].pt)
 			points2.append(kp2[match.trainIdx].pt)
 
-		fundamental, inliers = cv.findFundamentalMat(np.float32(points1), np.float32(points2), method=cv.FM_RANSAC, param2=self.confidence)
+		fundamental, inliers = cv.findFundamentalMat(np.float32(points1), np.float32(points2), method=cv.FM_RANSAC, ransacReprojThreshold=self.distance, confidence=self.confidence)
 
 		for inlier, match in zip(inliers, matches):
 			if inlier[0] > 0:
