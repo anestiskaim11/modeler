@@ -59,10 +59,10 @@ class Matcher:
 		for match in matches:
 			if len(match) > 1:
 				if match[0].distance/match[1].distance > self.ratio:
-					match.clear()
+					matches.remove(match)
 					removed += 1
 			else:
-				match.clear()
+				matches.remove(match)
 				removed += 1
 
 		return removed, matches
