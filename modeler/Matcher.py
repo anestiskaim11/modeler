@@ -59,10 +59,10 @@ class Matcher:
 		for match in matches:
 			if len(match) > 1:
 				if match[0].distance/match[1].distance > self.ratio:
-					matches.pop(match)
+					matches = matches[:matches.index(match)] + matches[matches.index(match)+1:]
 					removed += 1
 			else:
-				matches.pop(match)
+				matches = matches[:matches.index(match)] + matches[matches.index(match)+1:]
 				removed += 1
 
 		return removed, matches
