@@ -26,33 +26,59 @@ class Matcher:
 	def set_ratio(self, ratio):
 		self.ratio = ratio
 
-	def match(self, image1, image2):
+	# TODO check for validity! Kept the old code in comments.
+	# Turned the image pair to an image list.
+	def match(self, images):
 		enough_matches = False
 
-		kp1, desc1 = self.detector.detectAndCompute(image1, None)
-		kp2, desc2 = self.detector.detectAndCompute(image2, None)
+		# The new array variables.
+		k = len(images)
+		kp = [None] * k
+		desc = [[]]
+		matches = [[]]
+		sym_matches = [[]]
+
+		for i in range(k):
+			kp[i], new_desc = self.detector.detectAndCompute(images[i], None)
+			desc.append(new_desc)
+		# kp1, desc1 = self.detector.detectAndCompute(image1, None)
+		# kp2, desc2 = self.detector.detectAndCompute(image2, None)
 
 		# TODO try cv.DIST_L2 instead
 		matcher = cv.BFMatcher(cv.DIST_L2)
 
-		matches1 = matcher.knnMatch(desc1, desc2, k=2)
-		matches2 = matcher.knnMatch(desc2, desc1, k=2)
+		# Keep the knnMatch result for each image. The training data for each image
+		# is the whole list of images, excluding itself.
+		for i in range(k):
+			matches.append(matcher.knnMatch(desc[i], [j for j in desc if desc.index(j) != i], k=k))
 
-		_, matches1 = self.ratio_test(matches1)
-		_, matches2 = self.ratio_test(matches2)
+		# matches1 = matcher.knnMatch(desc1, desc2, k=2)
+		# matches2 = matcher.knnMatch(desc2, desc1, k=2)
 
-		sym_matches = self.symmetry_test(matches1, matches2)
-		matches = None
+		for i in range(k):
+			_, matches[i] = self.ratio_test(matches[i])
+		# _, matches1 = self.ratio_test(matches1)
+		# _, matches2 = self.ratio_test(matches2)
 
-		if len(sym_matches) < 200:
-			enough_matches = False
-		else:
-			enough_matches = True
-			self.fundamental_matrix, matches = self.ransac_test(sym_matches, kp1, kp2)
-			if len(matches) < 190:
-				enough_matches = False
+		# Try comparing the inages in pairs. So we go up until the second to last element.
+		for i in range(k - 1):
+			sym_matches.append(self.symmetry_test(matches[i], matches[i+1]))
 
-		return enough_matches, matches, kp1, kp2
+		# sym_matches = self.symmetry_test(matches1, matches2)
+		matches = [[]]
+		enough_matches = [False] * (k - 1)
+
+		for i in range(k - 1):
+			if len(sym_matches[i]) < 200:
+				enough_matches[i] = False
+			else:
+				enough_matches[i] = True
+				self.fundamental_matrix, new_matches = self.ransac_test(sym_matches, kp[i], kp[i+1])
+				matches.append(new_matches)
+				if len(matches[i]) < 190:
+					enough_matches[i] = False
+
+		return enough_matches, matches, kp
 
 	def ratio_test(self, matches):
 		removed = 0
