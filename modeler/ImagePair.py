@@ -28,10 +28,10 @@ class ImagePair:
 
 		self.enough_matches, self.matches, self.full_kp1, self.full_kp2 = good_matcher.match(image1, image2)
 		self.fundamental_matrix = good_matcher.get_fundamental_matrix()
-
-		for match in self.matches:
-			self.kp1.append(self.full_kp1[match.queryIdx])
-			self.kp2.append(self.full_kp2[match.trainIdx])
+		if self.enough_matches:
+			for match in self.matches:
+				self.kp1.append(self.full_kp1[match.queryIdx])
+				self.kp2.append(self.full_kp2[match.trainIdx])
 
 	def get_colors(self, image):
 		print('Image dimensions: ', image.shape[1], ', ', image.shape[0])
