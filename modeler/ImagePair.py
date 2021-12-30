@@ -35,6 +35,7 @@ class ImagePair:
 
 	def get_colors(self, image):
 		print('Image dimensions: ', image.shape[1], ', ', image.shape[0])
+		print('AAAAAAAAAA')
 
 		colors = []
 
