@@ -4,7 +4,7 @@ import numpy as np
 
 class Matcher:
 	def __init__(self):
-		self.ratio = 0.65
+		self.ratio = 0.9
 		self.refineF = True
 		self.confidence = 0.99
 		self.distance = 3.0
@@ -33,7 +33,7 @@ class Matcher:
 		kp2, desc2 = self.detector.detectAndCompute(image2, None)
 
 		# TODO try cv.DIST_L2 instead
-		matcher = cv.BFMatcher(cv.DIST_L2)
+		matcher = cv.BFMatcher(cv.NORM_L2)
 
 		matches1 = matcher.knnMatch(desc1, desc2, k=2)
 		matches2 = matcher.knnMatch(desc2, desc1, k=2)
@@ -44,12 +44,12 @@ class Matcher:
 		sym_matches = self.symmetry_test(matches1, matches2)
 		matches = None
 
-		if len(sym_matches) < 800:
+		if len(sym_matches) < 200:
 			enough_matches = False
 		else:
 			enough_matches = True
 			self.fundamental_matrix, matches = self.ransac_test(sym_matches, kp1, kp2)
-			if len(matches) < 800:
+			if len(matches) < 150:
 				enough_matches = False
 
 		return enough_matches, matches, kp1, kp2

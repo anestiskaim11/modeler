@@ -111,8 +111,8 @@ class SfM:
 		r_rog, _ = cv.Rodrigues(r)
 
 		_dc = np.float32([0, 0, 0, 0])
-
-		_, r_rog, t = cv.solvePnP(found3d_points, found2d_points, K, _dc, useExtrinsicGuess=False)
+		if(size != 0):
+			_, r_rog, t = cv.solvePnP(found3d_points, found2d_points, K, _dc, useExtrinsicGuess=False)
 		t1 = np.float32(t)
 
 		R1, _ = cv.Rodrigues(r_rog)
@@ -147,8 +147,9 @@ class SfM:
 
 		factor = 1
 		count = 0
-
+		print(self.number_of_images)
 		while file_number < self.number_of_images - 1:
+
 			frame1 = SfM.downsample(frame1)
 			frame2 = SfM.downsample(frame2)
 
@@ -229,7 +230,7 @@ class SfM:
 					point_cloud[i + prev_number_of_points_added].r = point_color[2]
 
 					self.ply.insert_point(point.x, point.y, point.z, point_color[0], point_color[1], point_color[2],
-											 file_number)
+												 file_number)
 
 				file_number += 1
 				prev_number_of_points_added = number_of_points_added + prev_number_of_points_added
@@ -239,17 +240,17 @@ class SfM:
 
 			picture_number1 = picture_number2 % self.number_of_images
 			picture_number2 = (picture_number2 + factor) % self.number_of_images
-
+	
 			count += 1
 			if count % self.number_of_images == self.number_of_images - 1:
 				picture_number2 += 1
 				factor += 1
-
+				
 			image_name1 = self.images_dir + 'im' + str(picture_number1) + '.jpg'
 			image_name2 = self.images_dir + 'im' + str(picture_number2) + '.jpg'
 			frame1 = cv.imread(image_name1)
 			frame2 = cv.imread(image_name2)
-			
+
 			print('\n\n')
 
 		print('Done')

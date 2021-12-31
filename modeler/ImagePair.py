@@ -8,11 +8,11 @@ class ImagePair:
 		self.image1 = image1
 		self.image2 = image2
 		self.debug_mode = debug_mode
-
+		#best results with 0.98 0.1 0.95
 		good_matcher = Matcher()
-		good_matcher.set_confidence_level(0.98)
-		good_matcher.set_min_distance_to_epipolar(1.0)
-		good_matcher.set_ratio(0.65)
+		good_matcher.set_confidence_level(0.97)
+		good_matcher.set_min_distance_to_epipolar(0.1)
+		good_matcher.set_ratio(0.95)
 		surf = cv.SIFT_create()
 		good_matcher.set_detector(surf)
 
@@ -35,7 +35,6 @@ class ImagePair:
 
 	def get_colors(self, image):
 		print('Image dimensions: ', image.shape[1], ', ', image.shape[0])
-		print('AAAAAAAAAA')
 
 		colors = []
 
